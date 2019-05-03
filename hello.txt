@@ -1,5 +1,9 @@
-hello word!!
- the first file to git
-1
-2
-3
+1.git ÉÏ´«µ½github
+
+a.git config --global user.name "MikeYSq"
+b.git config --global user.emil "2364963316@qq.com"
+c.cd /
+d.cd e/wheekgit
+e.git add  XXX
+f.git commit -m "XXX"
+g.git push origin master
