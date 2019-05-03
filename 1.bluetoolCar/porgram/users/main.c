@@ -100,8 +100,10 @@ void  main()
 	EA=1;     //开总中断	
 	PT1=1;    //定时器1中断优先	
 	
+
 while(1)
 	{
+	//	for(i=0;i<100;i++);
 	 
 	if(P3!=0xff)   //fuc=P3
 	{
@@ -140,6 +142,13 @@ switch(fuc)     //按键扫描
   }
 
 
+	typedef struct
+	{
+		int num;
+		char name[5];
+
+		
+	}adt;
 
 
 
