@@ -1,0 +1,93 @@
+C51 COMPILER V9.00   MOTOR                                                                 12/11/2017 18:51:37 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE MOTOR
+OBJECT MODULE PLACED IN ..\output\motor.obj
+COMPILER INVOKED BY: D:\work sofewae\MDK\MDK5 sofeware\C51\BIN\C51.EXE ..\users\motor.c OPTIMIZE(8,SPEED) BROWSE DEBUG O
+                    -BJECTEXTEND PRINT(..\temp\motor.lst) TABS(2) OBJECT(..\output\motor.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include "motor.h"
+   3          
+   4          unsigned int   Indata;
+   5          unsigned int   Indata1;
+   6          
+   7          
+   8          
+   9           
+  10          //前进   
+  11          void  motor_adv()
+  12          {
+  13   1         //LED=!LED;
+  14   1        Indata=PWM_HIG;
+  15   1        Indata1=PWM_HIG;
+  16   1      }
+  17          
+  18          
+  19          //后退
+  20          void    motor_ret()
+  21          {
+  22   1         //LED=!LED;
+  23   1        Indata=PWM_HIG;
+  24   1        Indata1=PWM_HIG;
+  25   1      
+  26   1      }
+  27          
+  28          
+  29          //左转
+  30          void   motor_r()
+  31          {
+  32   1         LED=!LED;
+  33   1        Indata=PWM_STOP;
+  34   1        Indata1=PWM_HIG;
+  35   1      
+  36   1      
+  37   1      }
+  38          
+  39          //右转
+  40          void   motor_l()
+  41          {
+  42   1          //LED=!LED;
+  43   1        Indata=PWM_HIG;
+  44   1        Indata1=PWM_STOP;
+  45   1      
+  46   1      }
+  47          
+  48          
+  49          //停止
+  50          void    motor_s()
+  51          {
+  52   1         //LED=!LED;
+  53   1        Indata=PWM_STOP;
+  54   1        Indata1=PWM_STOP;
+C51 COMPILER V9.00   MOTOR                                                                 12/11/2017 18:51:37 PAGE 2   
+
+  55   1      }
+  56          
+  57          
+  58          
+  59          
+  60          
+  61          
+  62          
+  63          
+  64          
+  65          
+  66          
+  67          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     67    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

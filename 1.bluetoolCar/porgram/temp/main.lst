@@ -1,0 +1,215 @@
+C51 COMPILER V9.00   MAIN                                                                  12/11/2017 18:51:35 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN ..\output\main.obj
+COMPILER INVOKED BY: D:\work sofewae\MDK\MDK5 sofeware\C51\BIN\C51.EXE ..\users\main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OB
+                    -JECTEXTEND PRINT(..\temp\main.lst) TABS(2) OBJECT(..\output\main.obj)
+
+line level    source
+
+   1          /*------------------------------
+   2          /*PWM:周期一定，i<50,    输出1
+   3          
+   4                          i>=50,   输出0
+   5          i每次加1      加到100，复位为0 .
+   6          -------------------------------*/
+   7          //定时器0  输出pwm
+   8          
+   9          //定时器1  决定功能
+  10          #include <reg52.H>
+  11          #include "scan.h"
+  12          #include "motor.h"
+  13           
+  14          #define   uchar   unsigned     char
+  15          #define   uint    unsigned     int
+  16            
+  17          
+  18          extern     Indata;       // 初始值PWM
+  19          
+  20          extern     Indata1;       //初始值PWM1 
+  21          
+  22          
+  23          sbit  PWM=P2^0;    //pwm输出角
+  24          sbit  PWM1=P2^1;   //pwm输出脚
+  25          
+  26          
+  27          uchar  fuc;
+  28          
+  29          
+  30          //sbit  key=P3^0;   //  按键加
+  31          
+  32          int    Temp0,Temp1; //pwm输出的中间值
+  33          
+  34          
+  35          
+  36          
+  37          
+  38          
+  39          uint  PWM_i=0,PWM_j=0;
+  40          
+  41          
+  42          
+  43          //延时
+  44          void  Delay_Ms(uchar ms)
+  45          {
+  46   1         int   i;
+  47   1        while(ms--)
+  48   1          for(i=0;i<40;i++);
+  49   1      }
+  50          
+  51          
+  52          
+  53          
+  54          
+C51 COMPILER V9.00   MAIN                                                                  12/11/2017 18:51:35 PAGE 2   
+
+  55          
+  56          //IO口初始化
+  57          void   IO_init()
+  58          {
+  59   1      P3=0XFF;
+  60   1      P2=0XFF;
+  61   1      LED=0;
+  62   1      }
+  63          
+  64          
+  65          
+  66          
+  67          //T0初始化
+  68          void   T0_init()
+  69          {
+  70   1      TMOD=0x01;  //T0方式1
+  71   1      //TH0=(65536-100)/256;
+  72   1      //TL0=(65536-100)%256;
+  73   1      ET0=1;
+  74   1      TR0=0;  
+  75   1      }
+  76          
+  77          
+  78          
+  79          //T1初始化
+  80          void  T1_init()
+  81          {
+  82   1      
+  83   1      TMOD=0x10;  //T0方式1
+  84   1      //TH1=(65536-100)/256;
+  85   1      //TL1=(65536-100)%256;
+  86   1      ET1=1;
+  87   1      TR1=0;
+  88   1      }
+  89          
+  90          
+  91          
+  92          //主函数
+  93          void  main()
+  94          {
+  95   1        IO_init();//io口初始化
+  96   1        T0_init();//T0初始化设置
+  97   1        T1_init();//T1初始化设置  
+  98   1        EA=1;     //开总中断  
+  99   1        PT1=1;    //定时器1中断优先 
+ 100   1        
+ 101   1      while(1)
+ 102   1        {
+ 103   2         
+ 104   2        if(P3!=0xff)   //fuc=P3
+ 105   2        {
+ 106   3            fuc=P3;
+ 107   3          while(P3!=0xff); //按键扫描到这  //怎么给P3
+ 108   3           //LED=!LED;
+ 109   3            TR1=1;
+ 110   3        }   
+ 111   2       }
+ 112   1      }   
+ 113          
+ 114          
+ 115          //按键扫描后进入T1，进行功能选择
+ 116           
+C51 COMPILER V9.00   MAIN                                                                  12/11/2017 18:51:35 PAGE 3   
+
+ 117          //T1中断服务函数
+ 118          void   T1_IRQ()interrupt 3 using 2
+ 119          { 
+ 120   1        //LED=!LED;
+ 121   1      TH0=(65536-100)/256;  
+ 122   1      TL0=(65536-100)%256;
+ 123   1        // LED=!LED;
+ 124   1         
+ 125   1      switch(fuc)     //按键扫描
+ 126   1       {
+ 127   2         case  0xfe:       motor_adv();break;  //改变一个全局变量
+ 128   2         case  0xfd:       motor_ret();break;
+ 129   2         case  0xfb:       motor_r();break;
+ 130   2         case  0xf7:       motor_l();break;
+ 131   2         case  0xef:       motor_s();break;  
+ 132   2         default:          motor_s();break; 
+ 133   2         
+ 134   2         
+ 135   2           }
+ 136   1        TR0=1;
+ 137   1        TR1=0;
+ 138   1        }
+ 139          
+ 140          
+ 141          
+ 142          
+ 143          
+ 144          
+ 145          //T0中断服务函数  pwm
+ 146          void   T0_IRQ()interrupt 1 using 1
+ 147          {
+ 148   1        //extern  uchar    Indata;         // 初始值PWM  //外部来的   indata.  //声明已被定义的外部变量
+ 149   1       // extern  uchar   Indata1;        //初始值PWM1   //外部来的  indata1.
+ 150   1        //LED=!LED;
+ 151   1      
+ 152   1      //  if(Indata==50)  LED=1;
+ 153   1        
+ 154   1      TH0=(65536-100)/256;  
+ 155   1      TL0=(65536-100)%256;
+ 156   1      
+ 157   1        
+ 158   1      //一号电机
+ 159   1      if(PWM_i>=PWM_MAX)   PWM_i=0;      //200*100=20000=20ms  实际>20ms
+ 160   1        
+ 161   1      if(PWM_i<Indata)    PWM=1;
+ 162   1        
+ 163   1      else
+ 164   1        PWM=0;
+ 165   1      
+ 166   1        PWM_i++;
+ 167   1      
+ 168   1      
+ 169   1      //2号电机
+ 170   1      if(PWM_j>=PWM_MAX)   PWM_j=0;      //200*100=20000=20ms  实际>20ms
+ 171   1        
+ 172   1      if(PWM_j<Indata1)    PWM1=1;
+ 173   1      
+ 174   1      else
+ 175   1           PWM1=0;
+ 176   1           PWM_j++;   
+ 177   1      
+ 178   1      
+C51 COMPILER V9.00   MAIN                                                                  12/11/2017 18:51:35 PAGE 4   
+
+ 179   1      }
+ 180          
+ 181          
+ 182          
+ 183          
+ 184                        
+ 185                        
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    260    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      9    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

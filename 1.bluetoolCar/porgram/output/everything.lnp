@@ -1,0 +1,4 @@
+"..\output\main.obj",
+"..\output\motor.obj" 
+TO "..\output\everything" 
+PRINT("..\temp\everything.m51") RAMSIZE(256) 
