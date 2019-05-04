@@ -7,3 +7,5 @@ d.cd e/wheekgit
 e.git add  XXX
 f.git commit -m "XXX"
 g.git push origin master
+h.i: insert
+i:ESC + wq
